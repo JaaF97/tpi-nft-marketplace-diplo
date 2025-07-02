@@ -53,7 +53,7 @@ describe("TrinityNFT", function () {
       expect(await trinityNFT.tokenURI(1)).to.equal(expectedURI);
     });
 
-    it("Debe incrementar el tokenId automáticamente", async function () {
+    it("Debe incrementar el tokenId automaticamente", async function () {
       await trinityNFT.mint(addr1.address, testIPFSHash);
       await trinityNFT.mint(addr2.address, "QmAnotherHash");
 

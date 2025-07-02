@@ -11,7 +11,7 @@ contract TrinityNFT is ERC721Enumerable, Ownable {
     
     /**
      * @dev Mint NFT con IPFS hash
-     * @param to Dirección que recibirá el NFT
+     * @param to Dirección que recibira el NFT
      * @param ipfsHash Hash IPFS del metadata
      */
     function mint(address to, string memory ipfsHash) public onlyOwner {

@@ -23,7 +23,7 @@ async function main() {
   const [owner] = await ethers.getSigners();
 
   // Reemplazar por la dirección resultante del último deploy
-  const nftAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const nftAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
   console.log("\nMinteando NFT...");
   await mintNFT(nftAddress, owner.address, metadataCID);

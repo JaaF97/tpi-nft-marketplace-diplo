@@ -118,7 +118,7 @@ describe("DiploToken", function () {
     expect(addr2BalanceDespues).to.equal(addr2BalanceAntes + transferAmount);
   });
 
-  // Test para verificar información básica del token
+  // Test para verificar información basica del token
   it("Debe tener la información correcta del token", async function () {
     const name = await token.name();
     const symbol = await token.symbol();
