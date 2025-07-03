@@ -137,8 +137,9 @@ function App() {
 
     setLoadingMessage("Uploading to IPFS...");
     try {
+      console.log("Linea 140 antes de uploadToIPFS");
       const ipfsCID = await uploadToIPFS(file, { name, description });
-
+      console.log("Linea 142 despues de uploadToIPFS");
       setLoadingMessage("Waiting for transaction confirmation...");
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
       const tx = await nftContract.mint(ipfsCID);
