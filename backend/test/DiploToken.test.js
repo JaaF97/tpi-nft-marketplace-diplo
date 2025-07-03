@@ -7,7 +7,8 @@ describe("DiploToken", function () {
   beforeEach(async () => {
     [owner, addr1, addr2] = await ethers.getSigners();
     DiploToken = await ethers.getContractFactory("DiploToken");
-    token = await DiploToken.deploy();
+    const initialSupply = ethers.parseEther("1000000");
+    token = await DiploToken.deploy(initialSupply);
   });
 
   it("Debe asignar el total del supply inicial al owner", async function () {
@@ -19,7 +20,7 @@ describe("DiploToken", function () {
   });
 
   it("Debe permitir que el owner mintee tokens", async function () {
-    const amount = ethers.parseUnits("1000", 18);
+    const amount = ethers.parseEther("1000");
 
     const balanceAntes = await token.balanceOf(addr1.address);
     console.log(
@@ -39,7 +40,7 @@ describe("DiploToken", function () {
   });
 
   it("No debe permitir que otros usen mint", async function () {
-    const amount = ethers.parseUnits("500", 18);
+    const amount = ethers.parseEther("500");
 
     const balanceAntes = await token.balanceOf(owner.address);
     console.log(
@@ -61,7 +62,7 @@ describe("DiploToken", function () {
 
   // Nuevo test para completar la actividad: "Probar transferencias"
   it("Debe permitir transferencias entre cuentas", async function () {
-    const transferAmount = ethers.parseUnits("500", 18);
+    const transferAmount = ethers.parseEther("500");
 
     // Owner transfiere tokens a addr1
     const ownerBalanceAntes = await token.balanceOf(owner.address);
@@ -86,8 +87,8 @@ describe("DiploToken", function () {
 
   // Test adicional para transferencias con approve/transferFrom
   it("Debe permitir transferencias con approve/transferFrom", async function () {
-    const approveAmount = ethers.parseUnits("300", 18);
-    const transferAmount = ethers.parseUnits("200", 18);
+    const approveAmount = ethers.parseEther("300");
+    const transferAmount = ethers.parseEther("200");
 
     // Owner aprueba que addr1 pueda gastar sus tokens
     await token.approve(addr1.address, approveAmount);

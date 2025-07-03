@@ -9,34 +9,35 @@ describe("Marketplace", function () {
     [owner, seller, buyer] = await ethers.getSigners();
 
     const DiploToken = await ethers.getContractFactory("DiploToken");
-    token = await DiploToken.connect(owner).deploy();
+    const initialSupply = ethers.parseEther("1000000");
+    token = await DiploToken.connect(owner).deploy(initialSupply);
 
-    const TrinityNFT = await ethers.getContractFactory("TrinityNFT");
+    const TrinityNFT = await ethers.getContractFactory("TrinityNFTCollection");
     nft = await TrinityNFT.connect(owner).deploy();
 
     const Marketplace = await ethers.getContractFactory("Marketplace");
-    marketplace = await Marketplace.connect(owner).deploy(
-      nft.target,
-      token.target
-    );
+    marketplace = await Marketplace.connect(owner).deploy(token.target);
 
-    // Mint NFT y tokens
-    await nft.connect(owner).mint(seller.address, "QmFakeMetadataCID");
+    await nft.connect(seller).mint("QmFakeMetadataCID");
+
+    // Owner le da tokens al buyer
     await token
       .connect(owner)
-      .mint(buyer.address, ethers.parseUnits("1000", 18));
+      .transfer(buyer.address, ethers.parseEther("1000"));
 
+    // Aprobar marketplace para transferencias
     await nft.connect(seller).approve(marketplace.target, 1);
     await token
       .connect(buyer)
-      .approve(marketplace.target, ethers.parseUnits("1000", 18));
+      .approve(marketplace.target, ethers.parseEther("1000"));
   });
 
   it("Permite listar y comprar un NFT", async () => {
     console.log("\n--- LISTADO DEL NFT ---");
-    const price = ethers.parseUnits("500", 18);
-    await marketplace.connect(seller).listNFT(1, price);
-    const listing = await marketplace.listings(1);
+    const price = ethers.parseEther("500");
+    await marketplace.connect(seller).listNFT(nft.target, 1, price);
+
+    const listing = await marketplace.listings(nft.target, 1);
     console.log("NFT listado por:", listing.seller);
     console.log(
       "Precio del NFT:",
@@ -45,6 +46,10 @@ describe("Marketplace", function () {
     );
 
     console.log("\n--- COMPRA DEL NFT ---");
+
+    // Vendedor prefiere pago diferido (para que aparezca en pendingWithdrawals)
+    await marketplace.connect(seller).setPaymentPreference(true);
+
     const sellerBalanceAntes = await token.balanceOf(seller.address);
     const buyerBalanceAntes = await token.balanceOf(buyer.address);
     console.log(
@@ -56,7 +61,8 @@ describe("Marketplace", function () {
       ethers.formatUnits(buyerBalanceAntes, 18)
     );
 
-    await marketplace.connect(buyer).buyNFT(1);
+    // Buyer compra
+    await marketplace.connect(buyer).buyNFT(nft.target, 1);
 
     const buyerNFT = await nft.ownerOf(1);
     expect(buyerNFT).to.equal(buyer.address);
@@ -67,13 +73,19 @@ describe("Marketplace", function () {
       ethers.formatUnits(ganancias, 18),
       "DIP"
     );
+
+    expect(ganancias).to.equal(price);
   });
 
   it("Permite retirar ganancias", async () => {
     console.log("\n--- RETIRO DE GANANCIAS ---");
-    const price = ethers.parseUnits("300", 18);
-    await marketplace.connect(seller).listNFT(1, price);
-    await marketplace.connect(buyer).buyNFT(1);
+    const price = ethers.parseEther("300");
+
+    // Vendedor prefiere cobro diferido
+    await marketplace.connect(seller).setPaymentPreference(true);
+
+    await marketplace.connect(seller).listNFT(nft.target, 1, price);
+    await marketplace.connect(buyer).buyNFT(nft.target, 1);
 
     const saldoAntes = await token.balanceOf(seller.address);
     console.log(
