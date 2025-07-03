@@ -1,12 +1,20 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  const TrinityNFT = await ethers.getContractFactory("TrinityNFT");
-  const nft = await TrinityNFT.deploy();
+  const [deployer] = await ethers.getSigners();
+  console.log(
+    "Desplegando contrato TrinityNFTCollection con la cuenta:",
+    deployer.address
+  );
+
+  const TrinityNFTCollection = await ethers.getContractFactory(
+    "TrinityNFTCollection"
+  );
+  const nft = await TrinityNFTCollection.deploy();
 
   await nft.waitForDeployment();
 
-  console.log("TrinityNFT desplegado en:", nft.target);
+  console.log("TrinityNFTCollection desplegado en:", nft.target);
   console.log("Nombre:", await nft.name());
   console.log("Símbolo:", await nft.symbol());
 }

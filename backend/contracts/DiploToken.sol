@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DiploToken is ERC20, Ownable {
-    constructor() ERC20("Diplo", "DIP") Ownable(msg.sender) {
-        _mint(msg.sender, 1_000_000 * 10 ** decimals());
+    constructor( uint256 initialSupply ) ERC20("Diplo", "DIP") Ownable(msg.sender) {
+        _mint(msg.sender, initialSupply);
     }
 
     // Función mint para testing (solo el owner puede mintear)

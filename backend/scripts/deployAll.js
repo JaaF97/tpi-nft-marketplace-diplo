@@ -4,20 +4,26 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Desplegando contratos con:", deployer.address);
 
+  const initialSupply = ethers.parseEther("1000000");
   const DiploToken = await ethers.getContractFactory("DiploToken");
-  const token = await DiploToken.deploy();
+  const token = await DiploToken.deploy(initialSupply);
   await token.waitForDeployment();
-  console.log("DiploToken:", token.target);
+  const tokenAddress = await token.getAddress();
+  console.log("DiploToken desplegado en:", tokenAddress);
 
-  const TrinityNFT = await ethers.getContractFactory("TrinityNFT");
-  const nft = await TrinityNFT.deploy();
+  const TrinityNFTCollection = await ethers.getContractFactory(
+    "TrinityNFTCollection"
+  );
+  const nft = await TrinityNFTCollection.deploy();
   await nft.waitForDeployment();
-  console.log("TrinityNFT:", nft.target);
+  const nftAddress = await nft.getAddress();
+  console.log("TrinityNFTCollection desplegado en:", nftAddress);
 
   const Marketplace = await ethers.getContractFactory("Marketplace");
-  const marketplace = await Marketplace.deploy(nft.target, token.target);
+  const marketplace = await Marketplace.deploy(tokenAddress);
   await marketplace.waitForDeployment();
-  console.log("Marketplace:", marketplace.target);
+  const marketplaceAddress = await marketplace.getAddress();
+  console.log("Marketplace desplegado en:", marketplaceAddress);
 }
 
 main().catch((err) => {
