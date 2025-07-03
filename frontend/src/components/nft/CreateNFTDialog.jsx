@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-
+import "../../App.css"
 export function CreateNFTDialog({ onMint, isMinting }) {
   const [file, setFile] = useState(null);
   const [name, setName] = useState("");

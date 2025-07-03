@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import { useNftMetadata } from "../../hooks/useNftMetadata";
-
+import "../../App.css"
 export function NFTCard({
   nft,
   isOwned,

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import "./app.css";
 import { ethers } from "ethers";
 import {
   createWeb3Modal,

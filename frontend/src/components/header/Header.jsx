@@ -1,5 +1,5 @@
 import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react";
-
+import "../../App.css"
 export function Header({ tokenBalance }) {
   const { open } = useWeb3Modal();
   const { address, isConnected } = useWeb3ModalAccount();
