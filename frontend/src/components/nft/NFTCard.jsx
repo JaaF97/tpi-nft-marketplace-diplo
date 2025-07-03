@@ -25,7 +25,7 @@ export function NFTCard({
   const handleBuyClick = async () => {
     setIsActionLoading(true);
     await onBuy({
-      id: nft.id,
+      tokenId: nft.id, 
       uri: nft.uri,
       price: listingPrice,
       seller: "",
