@@ -22,22 +22,22 @@ export const useNftMetadata = (tokenUri) => {
     const fetchMetadata = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       const metadataUrl = formatIpfsUrl(tokenUri);
-      
+
       try {
         const response = await fetch(metadataUrl);
         if (!response.ok) {
           throw new Error("Failed to fetch metadata");
         }
-        
+
         const data = await response.json();
-        
+
         // También formatear la URL de la imagen para que sea un enlace HTTP utilizable
         if (data.image) {
           data.image = formatIpfsUrl(data.image);
         }
-        
+
         setMetadata(data);
       } catch (e) {
         console.error("Failed to fetch NFT metadata:", e);
